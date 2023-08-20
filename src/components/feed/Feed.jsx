@@ -27,9 +27,12 @@ export default function Feed({username}) {
   return (
     <div className='feed'>
       <div className="feedWrapper">
-          <Share />
-          {posts?.map(post=>
-            <Post key={post.id} post={post} />
+          <Share fetchPosts={fetchPosts} />
+          {posts?.map((post, i)=>
+           <div key={i}>
+            <Post post={post} />
+          </div>
+          
           )}
          
       </div>

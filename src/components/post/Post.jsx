@@ -8,7 +8,7 @@ import { format } from 'timeago.js';
 import { AuthContext } from '../../context/AuthContext';
 
 
-export default function Post({post, key}) {
+export default function Post({post}) {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const [like, setLike] = useState(post.likes.length)
     const [isLiked, setIsLiked] = useState(false)
@@ -44,7 +44,7 @@ export default function Post({post, key}) {
       }, [post.userId]);
 
 return (
-    <div className='post' key={key}>
+    <div className='post'id={post._id}>
         <div className="postWrapper">
             <div className="postTop">
                 <div className="postTopLeft">
