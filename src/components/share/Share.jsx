@@ -1,6 +1,6 @@
 import { useContext, useRef, useState } from 'react';
 import './share.css';
-import {PermMedia, Label,Room, EmojiEmotions} from "@material-ui/icons";
+import {PermMedia, Label,Room, EmojiEmotions, Cancel} from "@material-ui/icons";
 import { AuthContext } from '../../context/AuthContext';
 import { API_URL } from '../../Utils/constant';
 import axios from 'axios';
@@ -64,6 +64,7 @@ export default function Share({fetchPosts}) {
             <div className="shareMid">
                 <div className="shareCenter">
                     <img className='shareImg' src={imgFile} alt="" />
+                   
                 </div> 
             </div>
             : null }
@@ -93,7 +94,11 @@ export default function Share({fetchPosts}) {
                         <span className="shareOptionText">Feelings</span>
                     </div>
                 </div>
-                <button type='submit' className="shareButton">Share</button>
+                <div>
+                    {imgFile!=="" && <button type='button' className="cancelButton" onClick={()=>{setImgFile(""); setFile(null)}} >Cancel</button>}
+                    <button type='submit' className="shareButton">Share</button>
+                </div>
+                
             </form>
         </div>
     </div>

@@ -65,7 +65,12 @@
   .rightbarFollowings{
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: flex-start;
+  }
+
+  .rightbarFollowings a{ 
+   margin: 5px;
+   text-align: center;
   }
   
   .rightbarFollowing{
@@ -80,4 +85,23 @@
     height: 100px;
     object-fit: cover;
     border-radius: 5px;
+  }
+
+  .rightbarFollowButton{
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #1872f2;
+    color: #fff;
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .rightbarFollowButton:focus{
+    outline: none;
   }

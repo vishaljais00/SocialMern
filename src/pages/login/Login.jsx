@@ -1,18 +1,23 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import "./login.css";
 import { loginCall } from "../../Apicalls";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { CircularProgress } from "@material-ui/core";
+import { useCookies } from 'react-cookie';
+
 export default function Login() {
+    const [cookies, setCookie, removeCookie] = useCookies();
     const email = useRef();
     const password = useRef();
     const {user, isFetching, dispatch} = useContext(AuthContext)
 
+ 
+
   const handleClick = (e) =>{
     e.preventDefault();
     console.log(email.current.value, password.current.value)
-    loginCall({email:email.current.value, password:password.current.value},dispatch)
+    loginCall({email:email.current.value, password:password.current.value},dispatch,setCookie)
   }
 
   console.log("user",user);

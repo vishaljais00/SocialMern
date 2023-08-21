@@ -1,13 +1,16 @@
 import { Chat, Notifications, Person, Search } from '@material-ui/icons'
 import './topbar.css'
 import { Link } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, useEffect } from 'react'
 import { AuthContext } from '../../context/AuthContext'
 
 export default function Topbar() {
+
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
     const {user} = useContext(AuthContext)
-    console.log(user)
+
+ 
     return (
         <div className='topbarContainer'>
             <div className="topbarLeft">
