@@ -35,7 +35,7 @@ export default function Post({post}) {
             try {
               const res = await axios.get(API_URL + `user?userId=${post.userId}`);
               setUser(res.data.data);
-              console.log(res.data.data)
+            
             } catch (error) {
             
             }

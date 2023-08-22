@@ -1,17 +1,17 @@
 import './messge.css'
+import { format } from 'timeago.js';
 
-export default function Message({own}) {
+export default function Message({own, msg, friend}) {
 
+    console.log(own, msg, friend, "own, msg, friend")
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
   return (
     <div className={own?'message own':'message'}>
         <div className="messageTop">
-            {!own && <img src={PF+ "person/10.jpeg"} alt="" className='messageImg'/>}
-            <p className='messgeText'>Hello user , this is dummy message
-            Hello user , this is dummy message Hello user
-        </p>
+            {!own && <img src={friend?.profilePicture !=="" ? PF+ friend?.profilePicture: PF+ "person/10.jpeg"} alt="" className='messageImg'/>}
+            <p className='messgeText'>{msg.text}</p>
             </div>
-        <div className="messageBottom"> 1 Hour Ago</div>
+        <div className="messageBottom"> {format(msg.createdAt)}</div>
     </div>
   )
 }

@@ -24,7 +24,7 @@ export default function Feed({username}) {
   useEffect(() => {
     fetchPosts(username);
   }, [username, user._id]);
-  console.log(username, "username")
+
   return (
     <div className='feed'>
       <div className="feedWrapper">

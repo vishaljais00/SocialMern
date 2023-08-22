@@ -24,7 +24,6 @@ export default function Profile() {
     fetchPosts(username);
   }, [username]);
 
-  console.log('user',user);
   return (   
     <>
       <Topbar />
