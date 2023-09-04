@@ -7,15 +7,51 @@ import ChatOnline from '../../components/chatOnline/ChatOnline'
 import { AuthContext } from '../../context/AuthContext'
 import { API_URL } from "../../Utils/constant";
 import axios from 'axios'
+import { io } from 'socket.io-client'
 
 export default function Messanger() {
 
   const [conversation, setConversation] = useState([])
   const [currentChat, setCurentChat] = useState(null)
   const [messages, setMessages] = useState(null)
+  const [newMessage, setNewMessages] = useState(null)
+  const [arrivalMessage, setArraivalMessages] = useState(null)
   const [friend, setFriend] = useState(null)
+  const [onlineUsers, setOnlineUsers] = useState([])
   const scrollRef = useRef();
   const {user} = useContext(AuthContext)
+  const socket = useRef()
+
+  useEffect(()=>{
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", ({senderId, text})=>{
+   
+      setArraivalMessages({
+        sender:senderId,
+        text: text,
+        createdAt: Date.now()
+      })
+    })
+  },[])
+
+  useEffect(()=>{
+
+    if(arrivalMessage && arrivalMessage.sender === friend._id  ){
+      const tempMessage = [...messages]
+      tempMessage.push(arrivalMessage)
+      setMessages(tempMessage)
+    } 
+  },[arrivalMessage,friend])
+
+
+  useEffect(()=>{
+    socket.current.emit("addUser", user._id)
+    socket.current.on("getUsers", users=>{
+      console.log(users)
+      setOnlineUsers(users)
+    })
+  },[user]);
+
 
   useEffect(()=>{
     const getConversations = async ()=>{
@@ -28,6 +64,8 @@ export default function Messanger() {
     }
     getConversations()
   }, [user._id])
+
+
 
   useEffect(()=>{
     const getMessages = async ()=>{
@@ -55,9 +93,43 @@ export default function Messanger() {
     }, [messages])
     
 
-   
+    // send message
 
-  console.log("messages", messages)
+    const handleSendMessage = async(e)=>{
+      e.preventDefault();
+      const message = {
+        sender: user._id,
+        text: newMessage,
+        conversationId : currentChat
+      }
+
+      const recevieId = friend._id
+
+      socket.current.emit("sendMessage", {
+        senderId: user._id,
+        recevierId: recevieId,
+        text: newMessage
+      })
+
+      try {
+            let responce = await axios.post(API_URL+"message", message);
+            if(responce.status === 200){
+              const tempMessage = [...messages]
+              tempMessage.push(responce.data.data)
+              setMessages(tempMessage)
+              setNewMessages("")
+
+            }
+  
+
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+
+    
+
   return (
     <>
       <Topbar />
@@ -66,8 +138,10 @@ export default function Messanger() {
           <div className="chatMenuWrapper">
             <input type="text" className="chatMenuInput" placeholder='search for friends'/>
             {conversation?.map((item, i)=> 
-            <div key={i} onClick={()=>{setCurentChat(item._id);  friendDetail(item.members[1]) }}>
-              <Conversation friend={item}  />
+            <div key={i} onClick={()=>{setCurentChat(item._id);  
+            friendDetail(item.members.find((ele)=> ele !== user._id )) 
+            }}>
+              <Conversation friend={item} user={user}  />
             </div>)}
           </div>
         </div>
@@ -80,21 +154,22 @@ export default function Messanger() {
                   <Message own={item.sender === user._id ? true: false} msg={item} friend={friend}/>
                 </div>)}
             </div>
-            <div className="chatBoxBottom">
-                <textarea className="chatMesasgeInput" placeholder='write something' id=""></textarea>
-                <button className='chatSubmitButton'>Send</button>
-            </div>
+            <form className="chatBoxBottom" onSubmit={handleSendMessage}>
+                <textarea className="chatMesasgeInput" 
+                placeholder='write something' 
+                id="sendMessage" 
+                value={newMessage}
+                onChange={(e)=>{setNewMessages(e.target.value)}}
+                ></textarea>
+                <button className='chatSubmitButton' type='sybmit'>Send</button>
+            </form>
             </> ): (<span className='noConversation'>Open a Conversation to start a chat</span>)}
            
           </div>
         </div>
         <div className="chatOnline">
           <div className="chatOnlineWrapper">
-              <ChatOnline />
-              <ChatOnline />
-              <ChatOnline />
-              <ChatOnline />
-              <ChatOnline />
+              <ChatOnline onlineUsers={onlineUsers} currUser={user._id} setCurentChat={setCurentChat} friendDetail={friendDetail} conversation={conversation} />
             </div> 
         </div>
       </div>
@@ -102,3 +177,9 @@ export default function Messanger() {
     
   )
 }
+
+
+
+
+
+

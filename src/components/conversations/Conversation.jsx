@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './conversation.css'
 import axios from 'axios'
 import { API_URL } from '../../Utils/constant'
-export default function Conversation({friend, setCurentChat, setFriend}) {
+export default function Conversation({friend, user}) {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
 
     const [data, setData] = useState(null)
@@ -10,9 +10,9 @@ export default function Conversation({friend, setCurentChat, setFriend}) {
 
       const friendDetail = async()=>{
         try {
-            const res = await axios.get(API_URL+`user?userId=${friend.members[1]}`)
+            const res = await axios.get(API_URL+`user?userId=${friend.members.find((ele)=> ele !== user._id )}`) 
             setData(res.data.data)
-            setFriend(res.data.data)
+        
         } catch (error) {
           console.log(error)
         }

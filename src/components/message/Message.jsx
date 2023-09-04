@@ -2,8 +2,6 @@ import './messge.css'
 import { format } from 'timeago.js';
 
 export default function Message({own, msg, friend}) {
-
-    console.log(own, msg, friend, "own, msg, friend")
     const PF = process.env.REACT_APP_PUBLIC_FOLDER
   return (
     <div className={own?'message own':'message'}>
